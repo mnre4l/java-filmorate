@@ -7,10 +7,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import ru.yandex.practicum.filmorate.model.Film;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.repository.FilmsRepository;
 import ru.yandex.practicum.filmorate.service.Marker;
 import ru.yandex.practicum.filmorate.service.ValidationException;
 import javax.validation.Valid;
-import java.util.HashMap;
 import java.util.List;
 
 
@@ -21,18 +21,15 @@ import java.util.List;
 @Slf4j
 @Validated
 public class FilmController {
-    /**
-     * Хранимые фильмы.
-     */
-    private HashMap<Integer, Film> films = new HashMap<>();
-    private int id;
+    private final FilmsRepository filmsRepository = new FilmsRepository();
     /**
      * Эндпоинт GET /films.
      * @return список фильмов.
      */
     @GetMapping("/films")
     public List<Film> getFilms() {
-        return List.copyOf(films.values());
+        log.info("GET /films");
+        return filmsRepository.getAll();
     }
 
     /**
@@ -43,8 +40,8 @@ public class FilmController {
     @PostMapping("/films")
     @Validated({Marker.OnCreate.class})
     public Film addFilm(@Valid @RequestBody Film film) {
-        film.setId(++id);
-        films.put(film.getId(), film);
+        log.info("POST /films: получен для " + film);
+        filmsRepository.create(film);
         log.info("POST /films: " + film);
         return film;
     }
@@ -57,13 +54,10 @@ public class FilmController {
     @PutMapping("/films")
     @Validated({Marker.OnUpdate.class})
     public Film updateFilm(@Valid @RequestBody Film film) throws ValidationException {
-        if (films.containsKey(film.getId())) {
-            films.put(film.getId(), film);
-            log.info("PUT /films: " + film);
-            return film;
-        } else {
-            throw new ValidationException("Такого пользователя нет");
-        }
+        log.info("PUT /films: получен для " + film);
+        filmsRepository.update(film);
+        log.info("PUT /films: " + film);
+        return film;
     }
 
     /**
@@ -71,10 +65,9 @@ public class FilmController {
      * @param e исключение типа MethodArgumentNotValidException, бросаемое валидатором
      * @return пришедший объект (по условию прохождения тестов). При создании исключения логируется ошибка
      */
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Film> handleValidationException(MethodArgumentNotValidException e, @RequestBody Film film) {
-        ValidationException ex = new ValidationException("Ошибка валидации: " + e.getBindingResult().getAllErrors());
+        new ValidationException("Ошибка валидации: " + e.getBindingResult().getAllErrors());
         return new ResponseEntity<>(film, HttpStatus.BAD_REQUEST);
     }
 

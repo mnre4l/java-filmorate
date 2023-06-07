@@ -7,11 +7,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.repository.UsersRepository;
 import ru.yandex.practicum.filmorate.service.Marker;
 import ru.yandex.practicum.filmorate.service.ValidationException;
-
 import javax.validation.Valid;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -24,8 +23,7 @@ public class UserController {
     /**
      * Хранимые пользователи.
      */
-    private HashMap<Integer, User> users = new HashMap<>();
-    int id;
+    private final UsersRepository usersRepository = new UsersRepository();
 
     /**
      * Эндпоинт GET /users.
@@ -33,7 +31,8 @@ public class UserController {
      */
     @GetMapping("/users")
     public List<User> getUsers() {
-        return List.copyOf(users.values());
+        log.info("GET /users");
+        return usersRepository.getAll();
     }
 
     /**
@@ -43,11 +42,8 @@ public class UserController {
     @PostMapping("/users")
     @Validated({Marker.OnCreate.class})
     public User addUser(@Valid @RequestBody User user) {
-        user.setId(++id);
-        if (user.getName() == null || user.getName().isBlank()) {
-            user.setName(user.getLogin());
-        }
-        users.put(user.getId(), user);
+        log.info("POST /users: получен для " + user);
+        usersRepository.create(user);
         log.info("POST /users: " + user);
         return user;
     }
@@ -60,13 +56,10 @@ public class UserController {
     @PutMapping("/users")
     @Validated({Marker.OnUpdate.class})
     public User updateUser(@Valid @RequestBody User user) throws ValidationException {
-        if (users.containsKey(user.getId())) {
-            users.put(user.getId(), user);
-            log.info("PUT /users: " + user);
-            return user;
-        } else {
-            throw new ValidationException("Такого пользователя нет");
-        }
+        log.info("PUT /users: получен для " + user);
+        usersRepository.update(user);
+        log.info("PUT /users: " + user);
+        return user;
     }
 
     /**
@@ -76,7 +69,7 @@ public class UserController {
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     private ResponseEntity<User> handleValidationException(MethodArgumentNotValidException e, @RequestBody User user) {
-        ValidationException ex = new ValidationException("Ошибка валидации: " + e.getBindingResult().getAllErrors());
+        new ValidationException("Ошибка валидации: " + e.getBindingResult().getAllErrors());
         return new ResponseEntity<>(user, HttpStatus.BAD_REQUEST);
     }
 }
