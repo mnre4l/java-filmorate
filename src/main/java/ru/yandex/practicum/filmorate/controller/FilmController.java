@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -21,7 +22,12 @@ import java.util.List;
 @Slf4j
 @Validated
 public class FilmController {
-    private final FilmsRepository filmsRepository = new FilmsRepository();
+
+    /**
+     * Репозиторий фильмов.
+     */
+    @Autowired
+    private FilmsRepository filmsRepository;
     /**
      * Эндпоинт GET /films.
      * @return список фильмов.
@@ -54,16 +60,17 @@ public class FilmController {
     @PutMapping("/films")
     @Validated({Marker.OnUpdate.class})
     public Film updateFilm(@Valid @RequestBody Film film) throws ValidationException {
-        log.info("PUT /films: получен для " + film);
+        log.info("PUT /films: получен для " + film.getId());
         filmsRepository.update(film);
-        log.info("PUT /films: " + film);
+        log.info("PUT /films: " + film.getId());
         return film;
     }
 
     /**
-     * Обработка ошибок валидации.
+     * Обработка исключения валидации валидации.
      * @param e исключение типа MethodArgumentNotValidException, бросаемое валидатором
-     * @return пришедший объект (по условию прохождения тестов). При создании исключения логируется ошибка
+     * @return пришедший объект (по условию прохождения тестов). При создании ValidationException
+     * логируется ошибка
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Film> handleValidationException(MethodArgumentNotValidException e, @RequestBody Film film) {

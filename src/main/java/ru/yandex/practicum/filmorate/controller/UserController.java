@@ -1,8 +1,10 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +15,7 @@ import ru.yandex.practicum.filmorate.service.ValidationException;
 import javax.validation.Valid;
 import java.util.List;
 
+
 /**
  * Класс-контроллер, обслуживающий пользователей.
  */
@@ -21,9 +24,10 @@ import java.util.List;
 @Validated
 public class UserController {
     /**
-     * Хранимые пользователи.
+     * Репозиторий пользователей.
      */
-    private final UsersRepository usersRepository = new UsersRepository();
+    @Autowired
+    private UsersRepository usersRepository;
 
     /**
      * Эндпоинт GET /users.
@@ -36,6 +40,7 @@ public class UserController {
     }
 
     /**
+     * Эндпоинт POST /users
      * @param user создаваемый пользователь
      * @return объект созданного пользователя в случае успеха
      */
@@ -56,14 +61,14 @@ public class UserController {
     @PutMapping("/users")
     @Validated({Marker.OnUpdate.class})
     public User updateUser(@Valid @RequestBody User user) throws ValidationException {
-        log.info("PUT /users: получен для " + user);
+        log.info("PUT /users: получен для " + user.getId());
         usersRepository.update(user);
-        log.info("PUT /users: " + user);
+        log.info("PUT /users: " + user.getId());
         return user;
     }
 
     /**
-     * Обработка ошибок валидации.
+     * Обработка исклчюения валидации.
      * @param e исключение типа MethodArgumentNotValidException, бросаемое валидатором
      * @return пришедший объект (по условию прохождения тестов). При создании исключения логируется ошибка
      */
