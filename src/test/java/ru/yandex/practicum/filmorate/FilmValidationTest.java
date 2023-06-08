@@ -18,6 +18,7 @@ public class FilmValidationTest {
     Film film;
 
     private static Validator validator;
+
     static {
         ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
         validator = validatorFactory.usingContext().getValidator();
