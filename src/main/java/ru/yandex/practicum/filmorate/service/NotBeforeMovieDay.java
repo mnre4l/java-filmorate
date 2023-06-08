@@ -7,11 +7,17 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+
+/**
+ * Валидация даты релиза фильма.
+ */
 @Target({ElementType.METHOD, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy=NotBeforeMovieDayValidator.class)
+@Constraint(validatedBy = NotBeforeMovieDayValidator.class)
 public @interface NotBeforeMovieDay {
-    String message() default "Bad release day";
+    String message() default "Bad release date";
+
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
 }

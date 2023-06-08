@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.model;
 
 import lombok.Data;
 import ru.yandex.practicum.filmorate.service.Marker;
+
 import javax.validation.constraints.*;
 import java.time.LocalDate;
 
@@ -16,7 +17,9 @@ public class User {
      */
     @Digits(integer = Integer.MAX_VALUE, fraction = 0, groups = Marker.OnUpdate.class)
     @Positive(groups = Marker.OnUpdate.class)
-    private int id;
+    @Null(groups = Marker.OnCreate.class)
+    @NotNull(groups = Marker.OnUpdate.class)
+    private Integer id;
     /**
      * Email пользователя.
      */

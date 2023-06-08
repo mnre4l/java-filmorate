@@ -1,6 +1,8 @@
 package ru.yandex.practicum.filmorate.repository;
 
+import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.User;
+
 import java.util.HashMap;
 import java.util.List;
 
@@ -8,9 +10,11 @@ import java.util.List;
 /**
  * Класс предназначен для хранения сущностей-пользователей.
  */
+@Component
 public class UsersRepository implements ModelsRepository<User> {
     private final HashMap<Integer, User> repository = new HashMap<>();
     private int id;
+
     @Override
     public void create(User user) {
         Checks.isNameNull(user);
