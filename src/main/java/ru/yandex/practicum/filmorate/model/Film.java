@@ -12,18 +12,12 @@ import java.time.LocalDate;
  */
 @Data
 public class Film {
-
     /**
      * Идентификатор фильма.
      */
     @Digits(integer = Integer.MAX_VALUE, fraction = 0, groups = Marker.OnUpdate.class)
     @Positive(groups = Marker.OnUpdate.class)
-    @Null(groups = Marker.OnCreate.class)
-    @NotNull(groups = Marker.OnUpdate.class)
-    private Integer id;
-    /**
-     * Имя фильма.
-     */
+    private int id;
     @NotBlank
     private String name;
     /**

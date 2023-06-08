@@ -1,16 +1,14 @@
 package ru.yandex.practicum.filmorate.repository;
 
-import org.springframework.stereotype.Component;
+
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.HashMap;
 import java.util.List;
 
-
 /**
  * Класс предназначен для хранения сущностей-фильмов.
  */
-@Component
 public class FilmsRepository implements ModelsRepository<Film> {
     private final HashMap<Integer, Film> repository = new HashMap<>();
     private int id;

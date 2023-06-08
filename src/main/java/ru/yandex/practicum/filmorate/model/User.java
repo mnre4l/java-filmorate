@@ -17,9 +17,7 @@ public class User {
      */
     @Digits(integer = Integer.MAX_VALUE, fraction = 0, groups = Marker.OnUpdate.class)
     @Positive(groups = Marker.OnUpdate.class)
-    @Null(groups = Marker.OnCreate.class)
-    @NotNull(groups = Marker.OnUpdate.class)
-    private Integer id;
+    private int id;
     /**
      * Email пользователя.
      */
