@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.repository;
 
+import jdk.jshell.spi.ExecutionControl;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Film;
 
@@ -28,12 +29,13 @@ public class FilmsRepository implements ModelsRepository<Film> {
     }
 
     @Override
-    public void delete(Film film) {
+    public void delete(Film film) throws ExecutionControl.NotImplementedException {
+        throw new ExecutionControl.NotImplementedException("Не реализовано");
     }
 
     @Override
-    public Film get(int id) {
-        return null;
+    public Film get(int id) throws ExecutionControl.NotImplementedException {
+        throw new ExecutionControl.NotImplementedException("Не реализовано");
     }
 
     @Override

@@ -13,6 +13,8 @@ import java.time.LocalDate;
 @Data
 public class Film {
 
+    public static final LocalDate FIRST_COMMERCIAL_MOVIE_DAY = LocalDate.parse("1895-12-28");
+
     /**
      * Идентификатор фильма.
      */
@@ -45,5 +47,4 @@ public class Film {
     /**
      * Ограничение по дате релиза.
      */
-    public static final LocalDate FIRST_COMMERCIAL_MOVIE_DAY = LocalDate.parse("1895-12-28");
 }

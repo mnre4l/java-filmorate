@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.repository;
 
+import jdk.jshell.spi.ExecutionControl;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -17,7 +18,7 @@ public class UsersRepository implements ModelsRepository<User> {
 
     @Override
     public void create(User user) {
-        Checks.isNameNull(user);
+        Checks.setNameAsLoginIfNameNull(user);
         user.setId(++id);
         repository.put(user.getId(), user);
     }
@@ -29,12 +30,13 @@ public class UsersRepository implements ModelsRepository<User> {
     }
 
     @Override
-    public void delete(User user) {
+    public void delete(User user) throws ExecutionControl.NotImplementedException {
+        throw new ExecutionControl.NotImplementedException("Не реализовано");
     }
 
     @Override
-    public User get(int id) {
-        return null;
+    public User get(int id) throws ExecutionControl.NotImplementedException {
+        throw new ExecutionControl.NotImplementedException("Не реализовано");
     }
 
     @Override

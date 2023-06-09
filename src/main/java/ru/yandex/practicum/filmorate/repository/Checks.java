@@ -28,7 +28,7 @@ public class Checks {
      *
      * @param user объект пользователя, сохраняемый в репозиторий пользователей
      */
-    public static void isNameNull(User user) {
+    public static void setNameAsLoginIfNameNull(User user) {
         if (user.getName() == null) {
             user.setName(user.getLogin());
         }

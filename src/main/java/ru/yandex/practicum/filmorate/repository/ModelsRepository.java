@@ -1,5 +1,7 @@
 package ru.yandex.practicum.filmorate.repository;
 
+import jdk.jshell.spi.ExecutionControl;
+
 import java.util.List;
 
 
@@ -13,7 +15,7 @@ public interface ModelsRepository<T> {
 
     void update(T t);
 
-    void delete(T t);
+    void delete(T t) throws ExecutionControl.NotImplementedException;
 
     /**
      * Предполагается, что получение сущности происходит по id
@@ -21,7 +23,7 @@ public interface ModelsRepository<T> {
      * @param id идентификатор хранимого объекта
      * @return хранимый объект
      */
-    T get(int id);
+    T get(int id) throws ExecutionControl.NotImplementedException;
 
     List<T> getAll();
 }
