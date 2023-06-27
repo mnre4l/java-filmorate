@@ -1,9 +1,9 @@
-package ru.yandex.practicum.filmorate;
+package ru.yandex.practicum.filmorate.ModelValidationTests;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.service.Marker;
+import ru.yandex.practicum.filmorate.service.validation.Marker;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;

@@ -1,8 +1,8 @@
 package ru.yandex.practicum.filmorate.model;
 
 import lombok.Data;
-import ru.yandex.practicum.filmorate.service.Marker;
-import ru.yandex.practicum.filmorate.service.NotBeforeMovieDay;
+import ru.yandex.practicum.filmorate.service.validation.Marker;
+import ru.yandex.practicum.filmorate.service.validation.NotBeforeMovieDay;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
@@ -13,6 +13,9 @@ import java.time.LocalDate;
 @Data
 public class Film {
 
+    /**
+     * Ограничение по дате релиза.
+     */
     public static final LocalDate FIRST_COMMERCIAL_MOVIE_DAY = LocalDate.parse("1895-12-28");
 
     /**
@@ -44,7 +47,4 @@ public class Film {
     @Digits(integer = Integer.MAX_VALUE, fraction = 0)
     @Positive
     private int duration;
-    /**
-     * Ограничение по дате релиза.
-     */
 }

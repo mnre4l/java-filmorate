@@ -1,19 +1,16 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.repository.FilmsRepository;
-import ru.yandex.practicum.filmorate.service.Marker;
-import ru.yandex.practicum.filmorate.service.ValidationException;
+import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.service.validation.Marker;
 
 import javax.validation.Valid;
-import java.util.List;
+import java.util.Collection;
 
 
 /**
@@ -22,13 +19,13 @@ import java.util.List;
 @RestController
 @Slf4j
 @Validated
+@RequiredArgsConstructor
 public class FilmController {
 
     /**
-     * Репозиторий фильмов.
+     * Сервис фильмов.
      */
-    @Autowired
-    private FilmsRepository filmsRepository;
+    private final FilmService filmService;
 
     /**
      * Эндпоинт GET /films.
@@ -36,9 +33,15 @@ public class FilmController {
      * @return список фильмов.
      */
     @GetMapping("/films")
-    public List<Film> getFilms() {
+    public Collection<Film> getFilms() {
         log.info("GET /films");
-        return filmsRepository.getAll();
+        return filmService.getAll();
+    }
+
+    @GetMapping("films/{id}")
+    public Film getFilm(@PathVariable int id) {
+        log.info("GET /film/" + id);
+        return filmService.get(id);
     }
 
     /**
@@ -49,9 +52,10 @@ public class FilmController {
      */
     @PostMapping("/films")
     @Validated({Marker.OnCreate.class})
+    @ResponseStatus(HttpStatus.CREATED)
     public Film addFilm(@Valid @RequestBody Film film) {
         log.info("POST /films: получен для " + film);
-        filmsRepository.create(film);
+        filmService.create(film);
         log.info("POST /films: " + film);
         return film;
     }
@@ -64,24 +68,37 @@ public class FilmController {
      */
     @PutMapping("/films")
     @Validated({Marker.OnUpdate.class})
-    public Film updateFilm(@Valid @RequestBody Film film) throws ValidationException {
+    @ResponseStatus(HttpStatus.OK)
+    public Film updateFilm(@Valid @RequestBody Film film) {
         log.info("PUT /films: получен для " + film.getId());
-        filmsRepository.update(film);
+        filmService.update(film);
         log.info("PUT /films: " + film.getId());
         return film;
     }
 
-    /**
-     * Обработка исключения валидации валидации.
-     *
-     * @param e исключение типа MethodArgumentNotValidException, бросаемое валидатором
-     * @return пришедший объект (по условию прохождения тестов). При создании ValidationException
-     * логируется ошибка
-     */
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Film> handleValidationException(MethodArgumentNotValidException e, @RequestBody Film film) {
-        new ValidationException("Ошибка валидации: " + e.getBindingResult().getAllErrors());
-        return new ResponseEntity<>(film, HttpStatus.BAD_REQUEST);
+    @PutMapping("/films/{id}/like/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void addLike(@PathVariable("id") int filmId, @PathVariable("userId") int userId) {
+        log.info("PUT /films/{id}/like/{userId}: получен для фильма с id = " + filmId + ", userId = " + userId);
+        filmService.addLike(filmId, userId);
+        log.info("Пользователь с id = " + userId + " лайкнул фильм с id = " + filmId + ".");
+    }
+
+    @DeleteMapping("/films/{id}/like/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteLike(@PathVariable("id") int filmId, @PathVariable("userId") int userId) {
+        log.info("DELETE /films/{id}/like/{userId}: получен для фильма с id = " + filmId + ", userId = " + userId);
+        filmService.deleteLike(filmId, userId);
+        log.info("Пользователь с id = " + userId + " удалил лайк у фильма с id = " + filmId + ".");
+    }
+
+    @GetMapping("/films/popular")
+    @ResponseStatus(HttpStatus.OK)
+    public Collection<Film> getPopularFilms(@RequestParam(defaultValue = "10") int count) {
+        log.info("GET /films/popular: получен для count = " + count);
+        Collection<Film> popularFilms = filmService.getPopulars(count);
+        log.info("Возвращен список популярных фильмов: " + popularFilms);
+        return popularFilms;
     }
 
 }

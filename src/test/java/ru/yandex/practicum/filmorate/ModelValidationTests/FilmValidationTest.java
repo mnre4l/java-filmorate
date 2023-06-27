@@ -1,9 +1,9 @@
-package ru.yandex.practicum.filmorate;
+package ru.yandex.practicum.filmorate.ModelValidationTests;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.service.Marker;
+import ru.yandex.practicum.filmorate.service.validation.Marker;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -54,7 +54,6 @@ public class FilmValidationTest {
         film.setId(-1);
 
         Set<ConstraintViolation<Film>> validates = validator.validate(film, Marker.OnUpdate.class);
-        System.out.println(validates);
 
         assertEquals(validates.size(), 1);
     }

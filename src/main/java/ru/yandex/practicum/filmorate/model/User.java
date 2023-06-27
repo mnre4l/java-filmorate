@@ -1,7 +1,7 @@
 package ru.yandex.practicum.filmorate.model;
 
 import lombok.Data;
-import ru.yandex.practicum.filmorate.service.Marker;
+import ru.yandex.practicum.filmorate.service.validation.Marker;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
@@ -35,6 +35,9 @@ public class User {
      * Имя.
      */
     private String name;
+    /**
+     * День рождения пользователя.
+     */
     @Past
     private LocalDate birthday;
 }
