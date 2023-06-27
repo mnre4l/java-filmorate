@@ -61,7 +61,7 @@ public class InMemoryUsersRepository implements UserRepository {
     @Override
     public void deleteFromFriends(Integer id, Integer friendId) {
         friendsRepository.get(id).remove(repository.get(friendId));
-        //friendsRepository.get(friendId).remove(repository.get(id));
+        friendsRepository.get(friendId).remove(repository.get(id));
     }
 
     @Override

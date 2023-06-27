@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 public class InMemoryFilmsRepository implements FilmRepository {
     private final HashMap<Integer, Film> repository = new HashMap<>();
     private final HashMap<Integer, Set<Integer>> filmAndUsersWhoLikedRepository = new HashMap<>();
-    private int id;
     private final TreeSet<Integer> popular = new TreeSet<>(new Comparator<Integer>() {
         @Override
         public int compare(Integer filmId1, Integer filmId2) {
@@ -29,6 +28,7 @@ public class InMemoryFilmsRepository implements FilmRepository {
             return filmLikes2 - filmLikes1;
         }
     });
+    private int id;
 
     @Override
     public void create(Film film) {

@@ -22,7 +22,7 @@ public class ValidateService {
     /**
      * Проверка, что объект уже создан. Предназначена для методов обновления.
      *
-     * @param id         идентификатор сущности
+     * @param id идентификатор сущности
      */
     public void isFilmCreated(Integer id) {
         if (!filmRepository.getAllId().contains(id)) {

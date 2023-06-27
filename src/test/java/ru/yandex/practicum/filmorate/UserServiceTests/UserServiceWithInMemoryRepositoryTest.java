@@ -85,10 +85,10 @@ public class UserServiceWithInMemoryRepositoryTest {
 
         User someFunnyMan = new User();
 
-        commonFriend.setName("someFunnyMan name");
-        commonFriend.setEmail("someFunnyMan@mail.ru");
-        commonFriend.setLogin("someFunnyMan");
-        commonFriend.setBirthday(LocalDate.of(1996, 8, 17));
+        someFunnyMan.setName("someFunnyMan name");
+        someFunnyMan.setEmail("someFunnyMan@mail.ru");
+        someFunnyMan.setLogin("someFunnyMan");
+        someFunnyMan.setBirthday(LocalDate.of(1996, 8, 17));
 
         userService.create(commonFriend);
         userService.create(someFunnyMan);
