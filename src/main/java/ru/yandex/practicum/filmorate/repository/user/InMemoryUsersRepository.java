@@ -5,10 +5,7 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.repository.UserRepository;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 
 /**
@@ -48,8 +45,16 @@ public class InMemoryUsersRepository implements UserRepository {
     }
 
     @Override
-    public Set<User> getFriends(Integer id) {
-        return friendsRepository.get(id);
+    public TreeSet<User> getFriends(Integer id) {
+        //если вернуть не в порядке возрастания id, постман считает, что тест провален ¯\_(ツ)_/¯
+        TreeSet<User> friends = new TreeSet<>(new Comparator<User>() {
+            @Override
+            public int compare(User o1, User o2) {
+                return o1.getId() - o2.getId();
+            }
+        });
+        friends.addAll(friendsRepository.get(id));
+        return friends;
     }
 
     @Override
