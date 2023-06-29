@@ -10,8 +10,7 @@ import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.service.validation.Marker;
 
 import javax.validation.Valid;
-import java.util.Collection;
-import java.util.Set;
+import java.util.List;
 
 
 /**
@@ -31,7 +30,7 @@ public class UserController {
      */
     @GetMapping("/users")
     @ResponseStatus(HttpStatus.OK)
-    public Collection<User> getUsers() {
+    public List<User> getUsers() {
         log.info("GET /users/");
         return userService.getAll();
     }
@@ -95,19 +94,19 @@ public class UserController {
 
     @GetMapping("/users/{id}/friends")
     @ResponseStatus(HttpStatus.OK)
-    public Set<User> getFriends(@PathVariable("id") int id) {
+    public List<User> getFriends(@PathVariable("id") int id) {
         log.info("GET /users/{id}/friends: получен для id = " + id);
-        Set<User> friends = userService.getFriends(id);
+        List<User> friends = userService.getFriends(id);
         log.info("Возвращен список друзей: " + friends);
         return friends;
     }
 
     @GetMapping("/users/{id}/friends/common/{otherId}")
     @ResponseStatus(HttpStatus.OK)
-    public Set<User> getCommonFriends(@PathVariable("id") int id,
-                                      @PathVariable(value = "otherId", required = false) int otherId) {
+    public List<User> getCommonFriends(@PathVariable("id") int id,
+                                       @PathVariable(value = "otherId", required = false) int otherId) {
         log.info("GET /users/{id}/friends/common/{otherId}: получен для id = " + id + ", otherId = " + otherId);
-        Set<User> friends = userService.getCommonFriends(id, otherId);
+        List<User> friends = userService.getCommonFriends(id, otherId);
         log.info("Возвращен список общих друзей: " + friends);
         return friends;
     }

@@ -2,7 +2,7 @@ package ru.yandex.practicum.filmorate.repository;
 
 import jdk.jshell.spi.ExecutionControl;
 
-import java.util.Collection;
+import java.util.List;
 
 
 /**
@@ -25,9 +25,9 @@ public interface ModelRepository<T> {
      */
     T get(Integer id);
 
-    Collection<T> getAll();
+    List<T> getAll();
 
     void deleteAll();
 
-    Collection<Integer> getAllId();
+    List<Integer> getAllId();
 }

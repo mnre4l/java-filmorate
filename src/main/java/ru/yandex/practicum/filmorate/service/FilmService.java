@@ -1,21 +1,23 @@
 package ru.yandex.practicum.filmorate.service;
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.repository.FilmRepository;
 
-import java.util.Collection;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class FilmService {
-    private final FilmRepository repository;
     @Qualifier("InMemoryFilmsRepository")
+    @NonNull
+    private final FilmRepository repository;
     private final ValidateService validateService;
 
-    public Collection<Film> getAll() {
+    public List<Film> getAll() {
         return repository.getAll();
     }
 
@@ -40,7 +42,7 @@ public class FilmService {
         repository.deleteLike(filmId, userId);
     }
 
-    public Collection<Film> getPopulars(int count) {
+    public List<Film> getPopulars(int count) {
         return repository.getPopulars(count);
     }
 

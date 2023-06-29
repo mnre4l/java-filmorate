@@ -10,7 +10,7 @@ import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.service.validation.Marker;
 
 import javax.validation.Valid;
-import java.util.Collection;
+import java.util.List;
 
 
 /**
@@ -33,7 +33,7 @@ public class FilmController {
      * @return список фильмов.
      */
     @GetMapping("/films")
-    public Collection<Film> getFilms() {
+    public List<Film> getFilms() {
         log.info("GET /films");
         return filmService.getAll();
     }
@@ -94,9 +94,9 @@ public class FilmController {
 
     @GetMapping("/films/popular")
     @ResponseStatus(HttpStatus.OK)
-    public Collection<Film> getPopularFilms(@RequestParam(defaultValue = "10") int count) {
+    public List<Film> getPopularFilms(@RequestParam(defaultValue = "10") int count) {
         log.info("GET /films/popular: получен для count = " + count);
-        Collection<Film> popularFilms = filmService.getPopulars(count);
+        List<Film> popularFilms = filmService.getPopulars(count);
         log.info("Возвращен список популярных фильмов: " + popularFilms);
         return popularFilms;
     }

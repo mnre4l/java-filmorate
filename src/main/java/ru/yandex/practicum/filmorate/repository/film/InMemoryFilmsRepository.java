@@ -49,13 +49,13 @@ public class InMemoryFilmsRepository implements FilmRepository {
     }
 
     @Override
-    public Collection<Film> getAll() {
-        return repository.values();
+    public List<Film> getAll() {
+        return List.copyOf(repository.values());
     }
 
     @Override
-    public Collection<Integer> getAllId() {
-        return repository.keySet();
+    public List<Integer> getAllId() {
+        return List.copyOf(repository.keySet());
     }
 
     @Override
@@ -82,7 +82,7 @@ public class InMemoryFilmsRepository implements FilmRepository {
         popular.add(filmId);
     }
 
-    public Collection<Film> getPopulars(int count) {
+    public List<Film> getPopulars(int count) {
         return popular.stream()
                 .limit(count)
                 .map(id -> repository.get(id))

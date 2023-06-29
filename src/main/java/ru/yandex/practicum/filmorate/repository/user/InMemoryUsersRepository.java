@@ -5,7 +5,10 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.repository.UserRepository;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.TreeSet;
 
 
 /**
@@ -14,14 +17,20 @@ import java.util.*;
 @Component("InMemoryUsersRepository")
 public class InMemoryUsersRepository implements UserRepository {
     private final HashMap<Integer, User> repository = new HashMap<>();
-    private final HashMap<Integer, Set<User>> friendsRepository = new HashMap<>();
+    private final HashMap<Integer, TreeSet<User>> friendsRepository = new HashMap<>();
     private int id;
 
     @Override
     public void create(User user) {
         user.setId(++id);
         repository.put(user.getId(), user);
-        friendsRepository.put(user.getId(), new HashSet<>());
+        friendsRepository.put(user.getId(), new TreeSet<>(new Comparator<User>() {
+            @Override
+            public int compare(User o1, User o2) {
+                if (o1.getId() == o2.getId()) return 0;
+                return o1.getId() - o2.getId();
+            }
+        }));
     }
 
     @Override
@@ -35,26 +44,18 @@ public class InMemoryUsersRepository implements UserRepository {
     }
 
     @Override
-    public Collection<User> getAll() {
-        return repository.values();
+    public List<User> getAll() {
+        return List.copyOf(repository.values());
     }
 
     @Override
-    public Collection<Integer> getAllId() {
-        return repository.keySet();
+    public List<Integer> getAllId() {
+        return List.copyOf(repository.keySet());
     }
 
     @Override
-    public TreeSet<User> getFriends(Integer id) {
-        //если вернуть не в порядке возрастания id, постман считает, что тест провален ¯\_(ツ)_/¯
-        TreeSet<User> friends = new TreeSet<>(new Comparator<User>() {
-            @Override
-            public int compare(User o1, User o2) {
-                return o1.getId() - o2.getId();
-            }
-        });
-        friends.addAll(friendsRepository.get(id));
-        return friends;
+    public List<User> getFriends(Integer id) {
+        return List.copyOf(friendsRepository.get(id));
     }
 
     @Override

@@ -1,23 +1,25 @@
 package ru.yandex.practicum.filmorate.service;
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.repository.UserRepository;
 
-import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
     @Qualifier("InMemoryUsersRepository")
+    @NonNull
     private final UserRepository repository;
     private final ValidateService validateService;
 
-    public Collection<User> getAll() {
+    public List<User> getAll() {
         return repository.getAll();
     }
 
@@ -49,12 +51,12 @@ public class UserService {
         repository.deleteFromFriends(id, friendId);
     }
 
-    public Set<User> getFriends(Integer id) {
+    public List<User> getFriends(Integer id) {
         validateService.isUserCreated(id);
         return repository.getFriends(id);
     }
 
-    public Set<User> getCommonFriends(int id, int otherId) {
+    public List<User> getCommonFriends(int id, int otherId) {
         validateService.isUserCreated(id);
         validateService.isUserCreated(otherId);
 
@@ -63,7 +65,7 @@ public class UserService {
         commonFriends.addAll(repository.getFriends(id));
         commonFriends.retainAll(repository.getFriends(otherId));
 
-        return commonFriends;
+        return List.copyOf(commonFriends);
     }
 
     public void deleteAllUsers() {

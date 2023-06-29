@@ -10,6 +10,7 @@ import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.service.ValidateService;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -71,7 +72,7 @@ public class UserServiceWithInMemoryRepositoryTest {
     @Test
     void shouldReturnUserFriends() {
         shouldAddFriendToUser();
-        assertEquals(Set.of(friend), userService.getFriends(user.getId()));
+        assertEquals(List.of(friend), userService.getFriends(user.getId()));
     }
 
     @Test
@@ -99,6 +100,6 @@ public class UserServiceWithInMemoryRepositoryTest {
 
         userService.addFriend(friend.getId(), commonFriend.getId());
 
-        assertEquals(userService.getCommonFriends(user.getId(), friend.getId()), Set.of(commonFriend));
+        assertEquals(userService.getCommonFriends(user.getId(), friend.getId()), List.of(commonFriend));
     }
 }
