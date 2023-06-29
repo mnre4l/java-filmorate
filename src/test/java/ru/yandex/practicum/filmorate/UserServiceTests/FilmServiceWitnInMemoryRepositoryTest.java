@@ -16,7 +16,7 @@ import java.time.LocalDate;
 import java.util.LinkedHashSet;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class FilmServiceWitnInMemoryRepositoryTest {
     private UserService userService;
@@ -24,10 +24,10 @@ public class FilmServiceWitnInMemoryRepositoryTest {
     private FilmRepository filmRepository;
     private ValidateService validateService;
     private UserRepository userRepository;
-    private User user1 = new User();
-    private User user2 = new User();
-    private Film film1 = new Film();
-    private Film film2 = new Film();
+    private final User user1 = new User();
+    private final User user2 = new User();
+    private final Film film1 = new Film();
+    private final Film film2 = new Film();
 
     @BeforeEach
     public void init() {

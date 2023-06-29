@@ -11,7 +11,6 @@ import ru.yandex.practicum.filmorate.service.ValidateService;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,8 +19,8 @@ public class UserServiceWithInMemoryRepositoryTest {
     private UserService userService;
     private ValidateService validateService;
     private UserRepository userRepository;
-    private User user = new User();
-    private User friend = new User();
+    private final User user = new User();
+    private final User friend = new User();
 
     @BeforeEach
     public void init() {

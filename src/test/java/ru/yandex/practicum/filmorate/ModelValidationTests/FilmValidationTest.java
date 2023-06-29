@@ -15,14 +15,14 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class FilmValidationTest {
-    Film film;
-
-    private static Validator validator;
+    private static final Validator validator;
 
     static {
         ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
         validator = validatorFactory.usingContext().getValidator();
     }
+
+    Film film;
 
     @BeforeEach
     public void createCorrectFilmObject() {
