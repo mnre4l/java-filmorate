@@ -1,16 +1,13 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.repository.UsersRepository;
-import ru.yandex.practicum.filmorate.service.Marker;
-import ru.yandex.practicum.filmorate.service.ValidationException;
+import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.service.validation.Marker;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -22,12 +19,9 @@ import java.util.List;
 @RestController
 @Slf4j
 @Validated
+@RequiredArgsConstructor
 public class UserController {
-    /**
-     * Репозиторий пользователей.
-     */
-    @Autowired
-    private UsersRepository usersRepository;
+    private final UserService userService;
 
     /**
      * Эндпоинт GET /users.
@@ -35,9 +29,17 @@ public class UserController {
      * @return список пользователей.
      */
     @GetMapping("/users")
+    @ResponseStatus(HttpStatus.OK)
     public List<User> getUsers() {
-        log.info("GET /users");
-        return usersRepository.getAll();
+        log.info("GET /users/");
+        return userService.getAll();
+    }
+
+    @GetMapping("/users/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public User getUsers(@PathVariable("id") int id) {
+        log.info("GET /users/" + id);
+        return userService.getUser(id);
     }
 
     /**
@@ -48,9 +50,10 @@ public class UserController {
      */
     @PostMapping("/users")
     @Validated({Marker.OnCreate.class})
+    @ResponseStatus(HttpStatus.CREATED)
     public User addUser(@Valid @RequestBody User user) {
         log.info("POST /users: получен для " + user);
-        usersRepository.create(user);
+        userService.create(user);
         log.info("POST /users: " + user);
         return user;
     }
@@ -63,22 +66,48 @@ public class UserController {
      */
     @PutMapping("/users")
     @Validated({Marker.OnUpdate.class})
-    public User updateUser(@Valid @RequestBody User user) throws ValidationException {
+    @ResponseStatus(HttpStatus.OK)
+    public User updateUser(@Valid @RequestBody User user) {
         log.info("PUT /users: получен для " + user.getId());
-        usersRepository.update(user);
+        userService.update(user);
         log.info("PUT /users: " + user.getId());
         return user;
     }
 
-    /**
-     * Обработка исклчюения валидации.
-     *
-     * @param e исключение типа MethodArgumentNotValidException, бросаемое валидатором
-     * @return пришедший объект (по условию прохождения тестов). При создании исключения логируется ошибка
-     */
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    private ResponseEntity<User> handleValidationException(MethodArgumentNotValidException e, @RequestBody User user) {
-        new ValidationException("Ошибка валидации: " + e.getBindingResult().getAllErrors());
-        return new ResponseEntity<>(user, HttpStatus.BAD_REQUEST);
+    @PutMapping("/users/{id}/friends/{friendId}")
+    @ResponseStatus(HttpStatus.OK)
+    public User addFriend(@PathVariable("id") int id, @PathVariable("friendId") int friendId) {
+        log.info("PUT /users/{id}/friends/{friendId}: получен для id = " + id + ", friendId = " + friendId);
+        userService.addFriend(id, friendId);
+        log.info("Пользователь с id = " + id + " и пользователь с id = " + friendId + " добавлены в друзья.");
+        return userService.getUser(friendId);
+    }
+
+    @DeleteMapping("/users/{id}/friends/{friendId}")
+    @ResponseStatus(HttpStatus.OK)
+    public User deleteFriend(@PathVariable("id") int id, @PathVariable("friendId") int friendId) {
+        log.info("DELETE /users/{id}/friends/{friendId}: получен для id = " + id + ", friendId = " + friendId);
+        userService.deleteFriend(id, friendId);
+        log.info("Пользователь с id = " + id + " и пользователь с id = " + friendId + " удалены из друзей.");
+        return userService.getUser(friendId);
+    }
+
+    @GetMapping("/users/{id}/friends")
+    @ResponseStatus(HttpStatus.OK)
+    public List<User> getFriends(@PathVariable("id") int id) {
+        log.info("GET /users/{id}/friends: получен для id = " + id);
+        List<User> friends = userService.getFriends(id);
+        log.info("Возвращен список друзей: " + friends);
+        return friends;
+    }
+
+    @GetMapping("/users/{id}/friends/common/{otherId}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<User> getCommonFriends(@PathVariable("id") int id,
+                                       @PathVariable(value = "otherId", required = false) int otherId) {
+        log.info("GET /users/{id}/friends/common/{otherId}: получен для id = " + id + ", otherId = " + otherId);
+        List<User> friends = userService.getCommonFriends(id, otherId);
+        log.info("Возвращен список общих друзей: " + friends);
+        return friends;
     }
 }

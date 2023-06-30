@@ -10,7 +10,7 @@ import java.util.List;
  *
  * @param <T> тип объекта, который хранится в репозитории.
  */
-public interface ModelsRepository<T> {
+public interface ModelRepository<T> {
     void create(T t);
 
     void update(T t);
@@ -23,7 +23,11 @@ public interface ModelsRepository<T> {
      * @param id идентификатор хранимого объекта
      * @return хранимый объект
      */
-    T get(int id) throws ExecutionControl.NotImplementedException;
+    T get(Integer id);
 
     List<T> getAll();
+
+    void deleteAll();
+
+    List<Integer> getAllId();
 }
