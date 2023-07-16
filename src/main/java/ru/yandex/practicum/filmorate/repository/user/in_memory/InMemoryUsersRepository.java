@@ -1,23 +1,31 @@
-package ru.yandex.practicum.filmorate.repository.user;
+package ru.yandex.practicum.filmorate.repository.user.in_memory;
 
-import jdk.jshell.spi.ExecutionControl;
+import org.hibernate.cfg.NotYetImplementedException;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.model.user.User;
 import ru.yandex.practicum.filmorate.repository.UserRepository;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.TreeSet;
+import java.util.*;
 
 
 /**
- * Класс предназначен для хранения сущностей-пользователей.
+ * Класс предназначен для хранения сущностей-пользователей в памяти.
  */
 @Component("InMemoryUsersRepository")
 public class InMemoryUsersRepository implements UserRepository {
+    /**
+     * Хеш-таблица, предназначенная для хранения пользователей по паре id пользователя - пользователь.
+     */
     private final HashMap<Integer, User> repository = new HashMap<>();
+    /**
+     * Хеш-таблица, предназначенная для хранения друзей пользователя.
+     * Ключ - id пользователя, значение - множество друзей пользователя.
+     * Упорядочивание пользователей в множестве друзей происходит по значению их id.
+     */
     private final HashMap<Integer, TreeSet<User>> friendsRepository = new HashMap<>();
+    /**
+     * Инкрементируемое значение, предназначенное для установки id пользователей.
+     */
     private int id;
 
     @Override
@@ -39,8 +47,8 @@ public class InMemoryUsersRepository implements UserRepository {
     }
 
     @Override
-    public void delete(User user) throws ExecutionControl.NotImplementedException {
-        throw new ExecutionControl.NotImplementedException("Не реализовано");
+    public void delete(User user) {
+        repository.remove(user.getId());
     }
 
     @Override
@@ -49,13 +57,22 @@ public class InMemoryUsersRepository implements UserRepository {
     }
 
     @Override
-    public List<Integer> getAllId() {
+    public List<Integer> getAllIds() {
         return List.copyOf(repository.keySet());
     }
 
     @Override
     public List<User> getFriends(Integer id) {
         return List.copyOf(friendsRepository.get(id));
+    }
+
+    /**
+     * @param id
+     * @return
+     */
+    @Override
+    public List<User> getConfirmFriends(Integer id) {
+        throw new NotYetImplementedException("Не реализовано для репозитория в памяти");
     }
 
     @Override
@@ -71,8 +88,8 @@ public class InMemoryUsersRepository implements UserRepository {
     }
 
     @Override
-    public User get(Integer id) {
-        return repository.get(id);
+    public Optional<User> get(Integer id) {
+        return Optional.of(repository.get(id));
     }
 
     @Override

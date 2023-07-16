@@ -2,7 +2,7 @@ package ru.yandex.practicum.filmorate.ModelValidationTests;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.film.Film;
 import ru.yandex.practicum.filmorate.service.validation.Marker;
 
 import javax.validation.ConstraintViolation;
@@ -31,6 +31,11 @@ public class FilmValidationTest {
         film.setDuration(50);
         film.setReleaseDate(LocalDate.of(2000, 5, 22));
         film.setDescription("Description");
+
+        Film.MotionPictureAssociation mpa = new Film.MotionPictureAssociation();
+        mpa.setId(1);
+
+        film.setMpa(mpa);
     }
 
     @Test
