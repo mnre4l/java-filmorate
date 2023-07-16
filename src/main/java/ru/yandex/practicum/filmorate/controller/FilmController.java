@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.film.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.service.validation.Marker;
 
@@ -38,10 +38,62 @@ public class FilmController {
         return filmService.getAll();
     }
 
-    @GetMapping("films/{id}")
+    /**
+     * Эндпоинт GET/fims/{id}
+     *
+     * @param id id фильма.
+     * @return запрашиваемый фильм.
+     */
+    @GetMapping("/films/{id}")
     public Film getFilm(@PathVariable int id) {
         log.info("GET /film/" + id);
         return filmService.get(id);
+    }
+
+    /**
+     * Эндпоинт GET /mpa.
+     *
+     * @return все типы MPA (в виде объектов), присутствущие в репозитории.
+     */
+    @GetMapping("/mpa")
+    public List<Film.MotionPictureAssociation> getAllMpa() {
+        log.info("GET /mpa/");
+        return filmService.getAllMpa();
+    }
+
+    /**
+     * Эндпоинт /mpa/{id}
+     *
+     * @param id id MPA.
+     * @return объект MPA, соответствующий id.
+     */
+    @GetMapping("/mpa/{id}")
+    public Film.MotionPictureAssociation getMpa(@PathVariable("id") int id) {
+        log.info("GET /mpa/" + id);
+        return filmService.getMpa(id);
+    }
+
+    /**
+     * Эндпоинт /genres.
+     *
+     * @return список всех жанров, содержащихся в репозитории.
+     */
+    @GetMapping("/genres")
+    public List<Film.Genre> getAllGenres() {
+        log.info("GET /genre/");
+        return filmService.getAllGenres();
+    }
+
+    /**
+     * Эндпоинт /genres/{id}
+     *
+     * @param id id жанро.
+     * @return объект жанра фильма, соответсвующий id.
+     */
+    @GetMapping("/genres/{id}")
+    public Film.Genre getGenre(@PathVariable("id") int id) {
+        log.info("GET /genre/" + id);
+        return filmService.getGenre(id);
     }
 
     /**
@@ -76,6 +128,13 @@ public class FilmController {
         return film;
     }
 
+    /**
+     * Эндпоинт /films/{id}/like/{userId}. Предназначен для обработки запроса на добавление лайка к фильму
+     * от пользователей.
+     *
+     * @param filmId id фильма, которому пользователь ставит лайк.
+     * @param userId id пользователя, который ставит лайк фильму.
+     */
     @PutMapping("/films/{id}/like/{userId}")
     @ResponseStatus(HttpStatus.OK)
     public void addLike(@PathVariable("id") int filmId, @PathVariable("userId") int userId) {
@@ -84,6 +143,12 @@ public class FilmController {
         log.info("Пользователь с id = " + userId + " лайкнул фильм с id = " + filmId + ".");
     }
 
+    /**
+     * Эндпоинт /films/{id}/like/{userId}. Предназначен для удаления лайка у фильма от пользователя.
+     *
+     * @param filmId id фильма, лайк у которого удалится.
+     * @param userId id пользователя, который удаляет свой лайк.
+     */
     @DeleteMapping("/films/{id}/like/{userId}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteLike(@PathVariable("id") int filmId, @PathVariable("userId") int userId) {
@@ -92,6 +157,12 @@ public class FilmController {
         log.info("Пользователь с id = " + userId + " удалил лайк у фильма с id = " + filmId + ".");
     }
 
+    /**
+     * Эндпоинт /films/popular. Предназначен для получения списка наиболее популярных фильмов.
+     *
+     * @param count число фильмов, которые будут включены в возвращаемый список.
+     * @return указанное число наиболее популярных фильмов фильмов.
+     */
     @GetMapping("/films/popular")
     @ResponseStatus(HttpStatus.OK)
     public List<Film> getPopularFilms(@RequestParam(defaultValue = "10") int count) {
@@ -100,5 +171,4 @@ public class FilmController {
         log.info("Возвращен список популярных фильмов: " + popularFilms);
         return popularFilms;
     }
-
 }
