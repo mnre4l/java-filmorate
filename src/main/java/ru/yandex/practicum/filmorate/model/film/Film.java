@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.model;
+package ru.yandex.practicum.filmorate.model.film;
 
 import lombok.Data;
 import ru.yandex.practicum.filmorate.service.validation.Marker;
@@ -6,6 +6,7 @@ import ru.yandex.practicum.filmorate.service.validation.NotBeforeMovieDay;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
+import java.util.LinkedHashSet;
 
 /**
  * Класс описывает фильм, добавляемый в сервис.
@@ -14,7 +15,7 @@ import java.time.LocalDate;
 public class Film {
 
     /**
-     * Ограничение по дате релиза.
+     * Ограничение по дате релиза - дата релиза фильма не раньше этой даты.
      */
     public static final LocalDate FIRST_COMMERCIAL_MOVIE_DAY = LocalDate.parse("1895-12-28");
 
@@ -27,7 +28,7 @@ public class Film {
     @NotNull(groups = Marker.OnUpdate.class)
     private Integer id;
     /**
-     * Имя фильма.
+     * Название фильма.
      */
     @NotBlank
     private String name;
@@ -47,4 +48,50 @@ public class Film {
     @Digits(integer = Integer.MAX_VALUE, fraction = 0)
     @Positive
     private int duration;
+    /**
+     * Жанр фильма. Может быть несколько.
+     */
+    private LinkedHashSet<Genre> genres;
+    /**
+     * Возрастной рейтинг.
+     *
+     * @see <a href="../resources/data.sql">data.sql</a>
+     */
+    @NotNull(groups = Marker.OnCreate.class)
+    private MotionPictureAssociation mpa;
+    /**
+     * Рейтинг.
+     */
+    private int rate;
+
+    /**
+     * Модель MPA
+     */
+    @Data
+    public static class MotionPictureAssociation {
+        /**
+         * id MPA
+         */
+        @NotNull
+        private int id;
+        /**
+         * Имя рейтинга.
+         */
+        private String name;
+    }
+
+    /**
+     * Модель жанра.
+     */
+    @Data
+    public static class Genre {
+        /**
+         * id жанра.
+         */
+        private int id;
+        /**
+         * Название жанра.
+         */
+        private String name;
+    }
 }
